@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupcakes - Signup</title>
+    <link href="../public/css/cupcakeStyles.css" rel="stylesheet">
+</head>
+<body>
+
+<a href="signUp.html" th:href="@{/}" class="logo-inline">
+    <img src="../public/images/cupcakelogo.png" th:src="@{/image/cupcakelogo.png}" class="logo"/>
+</a>
+
+<main>
+    <div class="signup-box">
+        <h2>Sign up here:</h2>
+        <form action="#" method="post">
+            <input type="email" placeholder="Enter your email" required><br>
+            <input type="password" placeholder="Password" required><br>
+            <input type="password" placeholder="Confirm the password" required><br>
+            <button type="submit">confirm the account</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>
