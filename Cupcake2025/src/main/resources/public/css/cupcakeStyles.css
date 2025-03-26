@@ -5,3 +5,138 @@ h1 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 3rem;
 }
+
+* {
+    margin: 20px;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Page background */
+body {
+    background-color: #f8f8f8;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* logo */
+.logo-inline{
+    display: inline-block;
+}
+
+.logo{
+    width: 1050px;
+    height: 200px;
+    max-width: 100%;
+}
+
+/* Login container */
+.login-container {
+    background: #eee;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-container h2 {
+    color: #4a2a76;
+    margin-bottom: 15px;
+}
+
+/* Login form */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 90%;
+}
+
+.login-button {
+    background-color: #4a2a76;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 90%;
+}
+
+.login-button:hover {
+    background-color: #6b4ba1;
+}
+
+/******* sign in part *******/
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.logo-inline{
+    display: inline-block;
+}
+
+.logo{
+    width: 1050px;
+    height: 200px;
+    max-width: 100%;
+}
+
+header {
+    background-color: #4a2a76;
+    padding: 20px;
+}
+
+.signup-box {
+    background: #e6e6e6;
+    padding: 30px;
+    width: 350px;
+    margin: 50px auto;
+    border-radius: 8px;
+
+}
+
+.signup-box h2 {
+    color: #4a2a76;
+}
+
+.signup-box input {
+    display: block;
+    width: 90%;
+    padding: 10px;
+    margin: 10px auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #4a2a76;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 87%;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #6b4ba1;
+}
