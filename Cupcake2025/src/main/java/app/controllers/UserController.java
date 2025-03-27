@@ -16,8 +16,8 @@ public class UserController {
     public static void addRouters(Javalin app, ConnectionPool connectionPool) {
         app.post("login", ctx -> login(ctx, connectionPool)); // Definerer en POST-rute til login, der kalder login-metoden
         app.get("logout", ctx -> logout(ctx));// Definerer en GET-rute til logout, der kalder logout-metoden
-        app.get("createuser", ctx -> ctx.render("createuser.html"));// get-methoden bruges til at komme fra forside.hmtl til opretBruger.
-        app.post("/createuser", ctx -> createuser(ctx, connectionPool));//post-methoden bruges til at lave en ny bruger og gå tilbage til forside.html
+        app.get("signUp", ctx -> ctx.render("signUp.html"));// get-methoden bruges til at komme fra forside.hmtl til opretBruger.
+        app.post("/signUp", ctx -> createuser(ctx, connectionPool));//post-methoden bruges til at lave en ny bruger og gå tilbage til forside.html
     }
 
     // Metode til at logge brugeren ud
@@ -41,11 +41,11 @@ public class UserController {
             ctx.sessionAttribute("email", user.getUserName());//viser emailen i topmenuen, så man ved hvem der er loggegt in
              //TODO: Tjek om den skal hedde getEmail eller getName, da name er email i db
 
-            if(user.isAdmin()){//tjekker om brugeren er admin eller kunde
+           /* if(user.isAdmin()){//tjekker om brugeren er admin eller kunde
                 ctx.redirect("/admin");// hvis admin så gå til admin siden
             }else{
                 ctx.redirect("/shop");//hvis kunde så gå til shop
-            }
+            }*/
         } catch (DatabaseException e){ // hvis login failer(forkert email eller password), kommer denne besked og siden rendere igen
             ctx.attribute("message", "Forkert email eller password");
             ctx.render("login.html");
@@ -62,23 +62,21 @@ public class UserController {
         if(password1.equals(password2)){
             try{
                 //opretter bruger i db
-                CupcakeMapper.createuser(email, password1, password2);
-
+                CupcakeMapper.createuser(email, password1, connectionPool);
                 //Sender succes besked
                 ctx.attribute("message","Du er nu blevet opretter med email:" + email + "Du kan nu logge ind.");
-
                 //sender brugeren til login.html
                 ctx.render("index.html");
+
             }catch (DatabaseException e){
                 //Hvis brugeren allerede findes
                 ctx.attribute("message", "Denne email eksistere allerede");
-                ctx.render("login.html");
-
+                ctx.render("signUp.html");
             }
         }else{
             //hvis passwordsne ikke er ens
             ctx.attribute("message", "Adgangskoderene matcher ikke");
-            ctx.render("createUser.html");
+            ctx.render("signUp.html");
         }
     }
 }
