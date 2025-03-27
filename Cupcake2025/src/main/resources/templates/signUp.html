@@ -15,10 +15,10 @@
 <main>
     <div class="signup-box">
         <h2>Sign up here:</h2>
-        <form action="#" method="post">
-            <input type="email" placeholder="Enter your email" required><br>
-            <input type="password" placeholder="Password" required><br>
-            <input type="password" placeholder="Confirm the password" required><br>
+        <form method="post">
+            <input type="email" name="email" placeholder="Enter your email" required><br>
+            <input type="password" name="password1" placeholder="Password" required><br>
+            <input type="password" name="password2" placeholder="Confirm the password" required><br>
 
             <button type="submit" formaction="/signUp">Sign up</button>
             <div> <p th:text="${message}"></p></div>
