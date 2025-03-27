@@ -43,6 +43,7 @@ public class CupcakeMapper {
             ps.setString(1, userName);
             ps.setString(2, password);
 
+
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected != 1) {
                 throw new DatabaseException("Fejl ved oprettelse af ny bruger");

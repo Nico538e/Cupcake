@@ -64,9 +64,9 @@ public class UserController {
                 //opretter bruger i db
                 CupcakeMapper.createuser(email, password1, connectionPool);
                 //Sender succes besked
-                ctx.attribute("message","Du er nu blevet opretter med email:" + email + "Du kan nu logge ind.");
+                ctx.attribute("message","Du er nu blevet opretter med email:" + email + " Du kan nu logge ind.");
                 //sender brugeren til login.html
-                ctx.render("index.html");
+                ctx.render("/signUp");
 
             }catch (DatabaseException e){
                 //Hvis brugeren allerede findes
