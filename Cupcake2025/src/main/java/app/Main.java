@@ -29,7 +29,6 @@ public class Main {
             // Routing
 
             UserController.addRoutes(app, connectionPool);
-
             app.get("/", ctx ->  ctx.render("index.html"));
         }
     }
