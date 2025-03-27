@@ -151,8 +151,9 @@ button:hover {
 }
 
 .nav{
+    background: #e6e6e6;
     border: 1px solid grey;
-    max-width: 650px;
+    max-width: 760px;
     padding: 10px;
     margin: auto;
     justify-content: space-between;
@@ -163,5 +164,6 @@ button:hover {
 }
 
 .main{
+    background: #e6e6e6;
     border: 1px solid grey;
 }

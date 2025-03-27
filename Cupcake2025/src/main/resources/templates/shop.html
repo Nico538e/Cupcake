@@ -18,7 +18,7 @@
         <a class="nav-but" href="inspiration.html">Få inspiration</a>
         <a class="nav-but" href="ordrehistorik.html">Ordre-historik</a>
 
-        email
+        <span th:text="${session.currentUser.username}"></span>
 
         <a href="shoppingcart.html">
             <img src="../public/images/shoppingCart.png"  class="image-size" alt="shopping cart">
@@ -33,6 +33,7 @@
 
     <select>
         <option>Vælg bund</option>
+        <option> </option>
     </select>
 
     <select>
