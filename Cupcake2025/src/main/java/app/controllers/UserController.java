@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class UserController {
 
     //Methode til at tilføje ruter til javalin
-    public static void addRouters(Javalin app, ConnectionPool connectionPool) {
+    public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         app.post("login", ctx -> login(ctx, connectionPool)); // Definerer en POST-rute til login, der kalder login-metoden
         app.get("logout", ctx -> logout(ctx));// Definerer en GET-rute til logout, der kalder logout-metoden
         app.get("signUp", ctx -> ctx.render("signUp.html"));// get-methoden bruges til at komme fra forside.hmtl til opretBruger.
