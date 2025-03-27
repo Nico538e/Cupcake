@@ -1,13 +1,53 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<title>Cupcake</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="../public/css/cupcakeStyles.css" th:href="@{/css/cupcakeStyles.css}" rel="stylesheet"/>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupcakes - forside</title>
+    <link href="../public/css/cupcakeStyles.css" rel="stylesheet">
 </head>
 
 <body>
-<h1>Welcome to the Javalin / Thymeleaf demo</h1>
-<p>This is your first web application in this world</p>
+<div class="header">
+    <div class="logo-section">
+        <img src="../public/images/cupcakelogo.png" alt="Olsker Cupcakes Logo">
+    </div>
+
+    <div class="nav">
+        <a class="nav-but" href="inspiration.html">Få inspiration</a>
+
+        <span th:text="${session.currentUser.username}"></span>
+
+        <a href="shoppingcart.html">
+            <img src="../public/images/shoppingCart.png"  class="image-size" alt="shopping cart">
+        </a>
+    </div>
+
+</div>
+
+<div class="main">
+    <h2>Velkommen om bord</h2>
+    <p>Øens bedste cupcake. Vælg og bestil her:</p>
+
+    <select>
+        <option>Vælg bund</option>
+        <option> </option>
+    </select>
+
+    <select>
+        <option>Vælg top</option>
+    </select>
+
+    <select>
+        <option>Vælg antal</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+
+    </select>
+
+    <button class="btn">Læg i kurv</button>
+</div>
 </body>
 </html>
