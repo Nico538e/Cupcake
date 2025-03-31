@@ -1,5 +1,6 @@
 package app.exceptions;
 
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,5 +18,8 @@ public class DatabaseException extends Exception
         super(userMessage);
         LOGGER.log(Level.WARNING, userMessage);
         LOGGER.log(Level.WARNING, "errorMessage: " + systemMessage);
+    }
+
+    public DatabaseException(String userMessage, SQLException e) {
     }
 }

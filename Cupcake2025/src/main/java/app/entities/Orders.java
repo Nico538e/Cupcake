@@ -2,11 +2,12 @@ package app.entities;
 
 public class Orders {
     private int orderId;
-     private User user;
+    private int userId;
+    private User user;
 
-    public Orders(int orderId, User user) {
+    public Orders(int orderId, int userId) {
         this.orderId = orderId;
-        this.user = user;
+        this.userId = userId;
     }
 
     public int getOrderId() {
