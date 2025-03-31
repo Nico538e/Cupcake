@@ -58,6 +58,52 @@ public class CupcakeMapper {
     }
 
     // works
+    public static List<Topping> getAllToppingNames(ConnectionPool connectionPool) throws DatabaseException {
+        List<Topping> toppingNameList = new ArrayList<>();
+        String sql = "SELECT topping_name FROM topping";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String toppingName = rs.getString("topping_name");
+
+                Topping topping = new Topping(toppingName);
+                toppingNameList.add(topping);
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed trying to get all toppings", e);
+        }
+        return toppingNameList;
+    }
+
+    // works
+    public static List<Bottom> getAllBottomNames(ConnectionPool connectionPool) throws DatabaseException {
+        List<Bottom> bottomNameList = new ArrayList<>();
+
+        String sql = "SELECT bottoms_name FROM bottom";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String bottomName = rs.getString("bottoms_name");
+
+                Bottom bottom = new Bottom(bottomName);
+                bottomNameList.add(bottom);
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed trying to get all bottoms", e);
+        }
+        return bottomNameList;
+    }
+
+
+    // works
     public static List<Topping> getAllToppings(ConnectionPool connectionPool) throws DatabaseException {
         List<Topping> toppingList = new ArrayList<>();
         String sql = "SELECT topping_id, topping_name, topping_price FROM topping";

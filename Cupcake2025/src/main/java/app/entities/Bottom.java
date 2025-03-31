@@ -16,6 +16,10 @@ private double bottomPrice;
         this.bottomPrice = bottomPrice;
     }
 
+    public Bottom(String bottomsName) {
+        this.bottomsName = bottomsName;
+    }
+
     public int getBottomId() {
         return bottomId;
     }

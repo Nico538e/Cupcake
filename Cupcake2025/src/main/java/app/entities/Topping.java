@@ -16,6 +16,10 @@ private double toppingPrice;
         this.toppingPrice = toppingPrice;
     }
 
+    public Topping(String toppingName){
+        this.toppingName = toppingName;
+    }
+
     public int getToppingId() {
         return toppingId;
     }
