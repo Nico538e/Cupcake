@@ -14,10 +14,13 @@ public class UserController {
 
     //Methode til at tilføje ruter til javalin
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
-        app.post("login", ctx -> login(ctx, connectionPool)); // Definerer en POST-rute til login, der kalder login-metoden
+        app.get("login", ctx -> ctx.render("login.html"));
+        app.post("/login", ctx -> login(ctx, connectionPool)); // Definerer en POST-rute til login, der kalder login-metoden
         app.get("logout", ctx -> logout(ctx));// Definerer en GET-rute til logout, der kalder logout-metoden
         app.get("signUp", ctx -> ctx.render("signUp.html"));// get-methoden bruges til at komme fra forside.hmtl til opretBruger.
         app.post("/signUp", ctx -> createuser(ctx, connectionPool));//post-methoden bruges til at lave en ny bruger og gå tilbage til forside.html
+        app.get("/inspiration", ctx -> ctx.render("inspiration.html"));
+        app.get("/shoppingcart", ctx -> ctx.render("shoppingcart.html"));
     }
 
     // Metode til at logge brugeren ud
@@ -36,9 +39,15 @@ public class UserController {
 
         try{
             User user = CupcakeMapper.login(email, password, connectionPool); //Tjekker om brugeren findes i databasen
+            if(user == null){
+                ctx.attribute("message", "forkert email eller login");
+                ctx.render("login.html");
+                return;
+            }
 
             ctx.sessionAttribute("currentUser", user);//gemmer brugeren i sessionen(så man ikke skal logge ind på hver side)
-            ctx.sessionAttribute("email", user.getUserName());//viser emailen i topmenuen, så man ved hvem der er loggegt in
+            ctx.sessionAttribute("currentUser", user.getUserName());//viser emailen i topmenuen, så man ved hvem der er loggegt in
+
              //TODO: Tjek om den skal hedde getEmail eller getName, da name er email i db
 
            /* if(user.isAdmin()){//tjekker om brugeren er admin eller kunde
@@ -46,6 +55,8 @@ public class UserController {
             }else{
                 ctx.redirect("/shop");//hvis kunde så gå til shop
             }*/
+
+            ctx.redirect("/");
         } catch (DatabaseException e){ // hvis login failer(forkert email eller password), kommer denne besked og siden rendere igen
             ctx.attribute("message", "Forkert email eller password");
             ctx.render("login.html");

@@ -14,9 +14,16 @@
     </div>
 
     <div class="nav">
-        <a class="nav-but" href="inspiration.html">Få inspiration</a>
+        <a class="nav-but" th:href="@{/inspiration}">Få inspiration</a>
 
-        <a href="shoppingcart.html">
+        <span th:if="${session.currentUser != null}" th:text="${session.currentUser}">Email</span>
+        <a class="nav-but" th:if="${session.currentUser != null}" th:href="@{/logout}">Log out</a>
+
+        <a class="nav-but" th:if="${session.currentUser == null}" th:href="@{/login}">Login</a>
+        <a class="nav-but" th:if="${session.currentUser == null}" th:href="@{/signUp}">Sign up</a>
+
+
+        <a th:href="@{/shoppingcart}">
             <img src="../public/images/shoppingcart.png" th:src="@{/images/shoppingcart.png}" class="image-size" alt="shopping cart">
         </a>
     </div>
@@ -29,7 +36,6 @@
 
     <select>
         <option>Vælg bund</option>
-        <option> </option>
     </select>
 
     <select>

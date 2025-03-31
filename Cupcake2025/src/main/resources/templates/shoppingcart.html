@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cupcakes - shop</title>
+    <title>Cupcakes - kurv</title>
     <link href="../public/css/cupcakeStyles.css" th:href="@{/css/cupcakeStyles.css}" rel="stylesheet">
 </head>
 
@@ -11,14 +11,12 @@
 <div class="header">
     <div class="logo-section">
         <a href="login.html" th:href="@{/}" class="logo-section">
-            <img src="../public/images/cupcakelogo.png" th:src="@{/images/cupcakelogo.png}" alt="Olsker Cupcakes Logo">
+        <img src="../public/images/cupcakelogo.png" th:src="@{/images/cupcakelogo.png}" alt="Olsker Cupcakes Logo">
         </a>
     </div>
 
-
     <div class="nav">
-        <a class="nav-but" href="#">Ordrer</a>
-        <a class="nav-but" href="ordrehistorik.html">Ordre-historik</a>
+        <a class="nav-but" th:href="@{/inspiration}">Få inspiration</a>
 
         <span th:if="${session.currentUser != null}" th:text="${session.currentUser}">Email</span>
         <a class="nav-but" th:if="${session.currentUser != null}" th:href="@{/logout}">Log out</a>
@@ -28,15 +26,16 @@
 
 
         <a th:href="@{/shoppingcart}">
-            <img src="../public/images/shoppingCart.png" th:src="@{/images/shoppingcart.png}" class="image-size" alt="shopping cart">
+            <img src="../public/images/shoppingcart.png" th:src="@{/images/shoppingcart.png}" class="image-size" alt="shopping cart">
         </a>
     </div>
 
 </div>
 
+<div class="kurv">
 
-<img src="../public/images/cupcake6.jpg" th:src="@{/images/cupcake6.jpg}" height="317" width="474"/>
-<img src="../public/images/cupcake8.jpg" th:src="@{/images/cupcake8.jpg}" height="317" width="474"/>
 
+
+</div>
 </body>
 </html>
