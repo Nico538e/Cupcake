@@ -202,9 +202,8 @@ public class CupcakeMapper {
         return null;
     }
 
-
-
     // working
+
     public static Topping getOneToppingByName(ConnectionPool connectionPool, String toppingName) throws DatabaseException {
         String sql = "SELECT topping_name, topping_price FROM topping where topping_name = ?";
 
@@ -229,8 +228,8 @@ public class CupcakeMapper {
         return null;
     }
 
-
     //working
+
     public static Bottom getOneBottomByName(ConnectionPool connectionPool, String bottomName) throws DatabaseException {
         String sql = "SELECT bottoms_name, bottom_price FROM bottom where bottoms_name = ?";
 

@@ -36,10 +36,14 @@
 
     <select>
         <option>Vælg bund</option>
+        <!-- Thymeleaf itererer gennem 'bottoms'-listen og opretter en option for hver bund -->
+        <option th:each="bottom : ${bottoms}" th:value="${bottom.bottomId}" th:text="${bottom.bottomsName}"></option>
     </select>
 
     <select>
         <option>Vælg top</option>
+        <!-- Thymeleaf itererer gennem 'toppings'-listen og opretter en option for hver bund -->
+        <option th:each="topping : ${toppings}" th:value="${topping.toppingId}" th:text="${topping.toppingName}"></option>
     </select>
 
     <select>

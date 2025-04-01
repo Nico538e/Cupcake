@@ -2,6 +2,8 @@ package app.controllers;
 
 
 
+import app.entities.Bottom;
+import app.entities.Topping;
 import app.entities.User;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
@@ -9,6 +11,8 @@ import app.persistence.CupcakeMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class UserController {
 
@@ -21,7 +25,9 @@ public class UserController {
         app.post("/signUp", ctx -> createuser(ctx, connectionPool));//post-methoden bruges til at lave en ny bruger og gå tilbage til forside.html
         app.get("/inspiration", ctx -> ctx.render("inspiration.html"));
         app.get("/shoppingcart", ctx -> ctx.render("shoppingcart.html"));
+        app.post("/showCupcakes", ctx -> UserController.getCupcakeOptions(ctx, connectionPool));
     }
+
 
     // Metode til at logge brugeren ud
     private static void logout(@NotNull Context ctx) {
@@ -90,4 +96,23 @@ public class UserController {
             ctx.render("signUp.html");
         }
     }
+
+    public static void getCupcakeOptions(Context ctx, ConnectionPool connectionPool) {
+
+        try {
+            List<Topping> toppings = CupcakeMapper.getAllToppings(connectionPool);
+            List<Bottom> bottoms = CupcakeMapper.getAllBottoms(connectionPool);
+
+            ctx.attribute("toppings", toppings);
+            ctx.attribute("bottoms", bottoms);
+            ctx.render("index.html");
+
+        } catch (DatabaseException e) {
+            ctx.status(500);
+            ctx.attribute("message", "Fejl ved hentning af cupcake data");
+            ctx.render("error.html");
+        }
+    }
+
+
 }
