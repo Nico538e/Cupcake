@@ -23,8 +23,9 @@
         <a class="nav-but" th:if="${session.currentUser == null}" th:href="@{/signUp}">Sign up</a>
 
 
-        <a th:href="@{/shoppingcart}">
-            <img src="../public/images/shoppingcart.png" th:src="@{/images/shoppingcart.png}" class="image-size" alt="shopping cart">
+        <a th:href="@{/shoppingCart}">
+            <img src="../public/images/shoppingcart.png" th:src="@{/images/shoppingcart.png}" class="image-size"
+                 alt="shopping cart">
         </a>
     </div>
 
@@ -34,28 +35,32 @@
     <h2>Velkommen om bord</h2>
     <p>Øens bedste cupcake. Vælg og bestil her:</p>
 
-    <select>
-        <option>Vælg bund</option>
-        <!-- Thymeleaf itererer gennem 'bottoms'-listen og opretter en option for hver bund -->
-        <option th:each="bottom : ${bottoms}" th:value="${bottom.bottomId}" th:text="${bottom.bottomsName}"></option>
-    </select>
+    <form action="/shoppingCart" method="post">
+        <select name="bottom">
+            <option value="">Vælg bund</option>
+            <!-- Thymeleaf itererer gennem 'bottoms'-listen og opretter en option for hver bund -->
+            <option th:each="bottom : ${bottoms}" th:value="${bottom.bottomId}"
+                    th:text="${bottom.bottomsName}"></option>
+        </select>
 
-    <select>
-        <option>Vælg top</option>
-        <!-- Thymeleaf itererer gennem 'toppings'-listen og opretter en option for hver bund -->
-        <option th:each="topping : ${toppings}" th:value="${topping.toppingId}" th:text="${topping.toppingName}"></option>
-    </select>
+        <select name="topping">
+            <option value="">Vælg top</option>
+            <!-- Thymeleaf itererer gennem 'toppings'-listen og opretter en option for hver bund -->
+            <option th:each="topping : ${toppings}" th:value="${topping.toppingId}"
+                    th:text="${topping.toppingName}"></option>
+        </select>
 
-    <select>
-        <option>Vælg antal</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
+        <select name="quantity">
+            <option>Vælg antal</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
 
-    </select>
+        </select>
 
-    <button class="btn">Læg i kurv</button>
+        <button type="submit" class="btn">Læg i kurv</button>
+    </form>
 </div>
 </body>
 </html>

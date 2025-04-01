@@ -25,17 +25,33 @@
         <a class="nav-but" th:if="${session.currentUser == null}" th:href="@{/signUp}">Sign up</a>
 
 
-        <a th:href="@{/shoppingcart}">
+        <a th:href="@{/shoppingCart}">
             <img src="../public/images/shoppingcart.png" th:src="@{/images/shoppingcart.png}" class="image-size" alt="shopping cart">
         </a>
     </div>
 
 </div>
 
-<div class="kurv">
+<div class="main">
+    <h2>Din indkøbskurv</h2>
+
+    <table>
+        <tr>
+            <th>Bund</th>
+            <th>Top</th>
+            <th>Antal</th>
+        </tr>
+        <tr th:each="cupcake : ${session.shoppingCart}">
+            <td th:text="${cupcake.bottom.bottomsName}"></td>
+            <td th:text="${cupcake.topping.toppingName}"></td>
+            <td th:text="${cupcake.quantity}"></td>
+        </tr>
+    </table>
 
 
 
+    <a class="btn" th:href="@{/checkout}">Gå til betaling</a>
 </div>
+
 </body>
 </html>
