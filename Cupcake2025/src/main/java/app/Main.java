@@ -29,6 +29,7 @@ public class Main {
             // Routing
 
             UserController.addRoutes(app, connectionPool);
-            app.get("/", ctx ->  ctx.render("index.html"));
+            app.get("/", ctx -> UserController.getCupcakeOptions(ctx, connectionPool));
+
         }
     }
