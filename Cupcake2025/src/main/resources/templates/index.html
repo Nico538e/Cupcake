@@ -22,7 +22,6 @@
         <a class="nav-but" th:if="${session.currentUser == null}" th:href="@{/login}">Login</a>
         <a class="nav-but" th:if="${session.currentUser == null}" th:href="@{/signUp}">Sign up</a>
 
-
         <a th:href="@{/shoppingCart}">
             <img src="../public/images/shoppingcart.png" th:src="@{/images/shoppingcart.png}" class="image-size"
                  alt="shopping cart">

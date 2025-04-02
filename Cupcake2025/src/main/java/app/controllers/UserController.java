@@ -83,10 +83,10 @@ public class UserController {
 
             Boolean fromBasket = ctx.sessionAttribute("fromBasket");
 
-            if(fromBasket == true){
-                ctx.redirect("/shoppingCart");
+            if(fromBasket == null){
+                ctx.render("index.html");
             }else{
-                ctx.redirect("/");
+                ctx.redirect("/shoppingCart");
             }
 
 //session atribute hvis du kommer fra basket ligesom user
