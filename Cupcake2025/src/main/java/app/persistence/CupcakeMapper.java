@@ -356,5 +356,45 @@ public class CupcakeMapper {
         return newOrder;
     }
 
+    //Get amount by userId
+
+    public static double getAmountById(ConnectionPool connectionPool, int userID) throws DatabaseException {
+        String sql = "SELECT amount FROM users where user_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)
+        ){
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+
+
+            if (rs.next()) {
+                double amount = rs.getDouble("amount");
+
+                return amount;
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed trying to get the amount by the name", e);
+        }
+        //Den ville ikke lade os have den returne null
+        return 0;
+    }
+
+    //Mangler en metode der kan opdaterer amount på enn kundes id
+    /* public static double updateAmountOnId(Connectionpool connectionPool, int userID, double newAmount){
+    //Jeg er ikke sikker på syntaks
+    String sql = "UPDATE users SET amount = ? where user_id = ?";
+    try(blah blah blah)
+    curly brackets open
+    ps.setDouble(1, newAmount);
+    ps.setInt(2,userID);
+            copy paste linje 47-50 med executeUpdate
+
+            Return the newAmount
+           // husk at slutte curly brackets
+         //  return? det kan være I vælger ikke at returnerer
+    }*/
+
 
 }

@@ -26,7 +26,7 @@ public class UserController {
         app.get("signUp", ctx -> ctx.render("signUp.html"));// get-methoden bruges til at komme fra forside.hmtl til opretBruger.
         app.post("/signUp", ctx -> createuser(ctx, connectionPool));//post-methoden bruges til at lave en ny bruger og gå tilbage til forside.html
         app.get("/inspiration", ctx -> ctx.render("inspiration.html"));
-        app.get("/shoppingCart", ctx -> showCart(ctx));
+        app.get("/shoppingCart", ctx -> showCart(ctx, connectionPool));
         app.post("/showCupcakes", ctx -> UserController.getCupcakeOptions(ctx, connectionPool));
         app.post("/shoppingCart", ctx -> addToShoppingCart(ctx,connectionPool));
         app.get("/checkout",ctx -> validatePayment(ctx));
@@ -167,7 +167,7 @@ public class UserController {
     }
 
     // Metode til at vise indkøbskurven
-    public static void showCart(Context ctx) {
+    public static void showCart(Context ctx, ConnectionPool connectionPool) {
         // Hent indkøbskurven fra sessionen (hvis den findes)
         List<Cupcake> shoppingCart = ctx.sessionAttribute("shoppingCart");
 
@@ -188,7 +188,20 @@ public class UserController {
 
         // Render shoppingCart siden
         ctx.render("shoppingcart.html");
-    }
 
+        //Når de har trykket på knappen skal I kalde på CupcakeMapper.getAmountByID, med userID og connectionPool. Endvidere skal I bagefter sammenligne totalPrice med amout, som bliver returneret fra metoden.
+        // der mangler måske lidt kode
+        /*
+        double amount = CupcakeMapper.getAmountByID(blah lahc blkah);
+
+        if(totalPrice < amount) curly
+        double newAmount = amount-totalPrice;
+        CupcakeMapper.updateAmountByID(blah blah blha);
+        ... renderer siden med at de har købt den..
+        curly slut else curly
+        renderer en side med at der er ikke nok på deres saldo curly slut
+        */
+
+    }
 
 }
