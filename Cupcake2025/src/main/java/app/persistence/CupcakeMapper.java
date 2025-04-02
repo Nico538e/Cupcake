@@ -57,6 +57,31 @@ public class CupcakeMapper {
         }
     }
 
+    public static List<User> getAllUsers(ConnectionPool connectionPool, String role) throws DatabaseException {
+        List<User> userNameList = new ArrayList<>();
+        String sql = "SELECT user_id, user_name  FROM users where role = 'postgres'";
+
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+
+
+            while (rs.next()) {
+                int userId = rs.getInt("user_id");
+                String userName = rs.getString("user_name");
+
+                User users = new User(userId,userName);
+                userNameList.add(users);
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed trying to get all userNames", e);
+        }
+        return userNameList;
+    }
+
     // works
     public static List<Topping> getAllToppingNames(ConnectionPool connectionPool) throws DatabaseException {
         List<Topping> toppingNameList = new ArrayList<>();

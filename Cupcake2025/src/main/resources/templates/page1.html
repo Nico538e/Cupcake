@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WatchUsers</title>
+    <link href="../public/css/cupcakeStyles.css" th:href="@{/css/cupcakeStyles.css}" rel="stylesheet">
+</head>
+<body>
+<div class="header">
+    <div class="logo-section">
+        <img src="../public/images/cupcakelogo.png" th:src="@{/images/cupcakelogo.png}" alt="Olsker Cupcakes Logo">
+    </div>
+    <div class="nav">
+        <span th:if="${session.currentUser != null}" th:text="${session.currentUser}">Email</span>
+        <a class="nav-but" th:if="${session.currentUser != null}" th:href="@{/logout}">Log out</a>
+    </div>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Users</th>
+        <th>ShowOrders</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user:${users}">
+        <td th:text="|${user.userId}. ${user.userName}|"></td>
+        <td>
+            <a class="nav-but" th:if="${session.currentUser != null}" th:href="@{/adminWatchOrders}">Orders</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WatchUsersOrders</title>
+</head>
+<body>
+<h2>User orders <span th:text="${userId}"></span></h2>
+<table>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${orders.userId}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
