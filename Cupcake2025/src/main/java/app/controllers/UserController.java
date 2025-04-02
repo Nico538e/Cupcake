@@ -32,7 +32,6 @@ public class UserController {
         app.get("/admin", ctx -> UserController.getUserOptions(ctx, connectionPool));
         app.get("/adminWatchOrders", ctx -> UserController.watchOrders(ctx, connectionPool));
         app.post("/admin", ctx -> ctx.redirect("page2.html"));
-        System.out.println("den rammer routes");
         app.post("/shoppingCart", ctx -> addToShoppingCart(ctx,connectionPool));
         app.get("/checkout",ctx -> validatePayment(ctx));
 
