@@ -26,9 +26,24 @@ public class UserController {
         app.get("signUp", ctx -> ctx.render("signUp.html"));// get-methoden bruges til at komme fra forside.hmtl til opretBruger.
         app.post("/signUp", ctx -> createuser(ctx, connectionPool));//post-methoden bruges til at lave en ny bruger og gå tilbage til forside.html
         app.get("/inspiration", ctx -> ctx.render("inspiration.html"));
-        app.get("/shoppingCart", ctx -> ctx.render("shoppingcart.html"));
+        app.get("/shoppingCart", ctx -> showCart(ctx));
         app.post("/showCupcakes", ctx -> UserController.getCupcakeOptions(ctx, connectionPool));
         app.post("/shoppingCart", ctx -> addToShoppingCart(ctx,connectionPool));
+        app.get("/checkout",ctx -> validatePayment(ctx));
+
+    }
+
+    private static void validatePayment(@NotNull Context ctx) {
+        User user = ctx.sessionAttribute("currentUser");
+
+        if(user == null){
+            ctx.sessionAttribute("fromBasket", true);
+            ctx.redirect("/login");
+
+        }else{
+            //træk penge fra database
+            //betaling er gået igemmen side(redirct)
+        }
 
     }
 
@@ -66,7 +81,16 @@ public class UserController {
                 ctx.redirect("/shop");//hvis kunde så gå til shop
             }*/
 
-            ctx.redirect("/");
+            Boolean fromBasket = ctx.sessionAttribute("fromBasket");
+
+            if(fromBasket == true){
+                ctx.redirect("/shoppingCart");
+            }else{
+                ctx.redirect("/");
+            }
+
+//session atribute hvis du kommer fra basket ligesom user
+            //if statement med om du komer fra basket
         } catch (DatabaseException e){ // hvis login failer(forkert email eller password), kommer denne besked og siden rendere igen
             ctx.attribute("message", "Forkert email eller password");
             ctx.render("login.html");
@@ -122,13 +146,12 @@ public class UserController {
         int bottomId = Integer.parseInt(ctx.formParam("bottom"));
         int toppingId = Integer.parseInt(ctx.formParam("topping"));
         int quantity = Integer.parseInt(ctx.formParam("quantity"));
-        int price = Integer.parseInt(ctx.formParam("price"));
 
         Bottom bottom = CupcakeMapper.getOneBottomById(connectionPool, bottomId);
         Topping topping = CupcakeMapper.getOneToppingById(connectionPool, toppingId);
 
 
-        Cupcake cupcake = new Cupcake(bottom, topping, quantity, price);
+        Cupcake cupcake = new Cupcake(bottom, topping, quantity);
 
         List<Cupcake> shoppingCart = ctx.sessionAttribute("shoppingCart");
 
@@ -141,7 +164,6 @@ public class UserController {
         ctx.sessionAttribute("shoppingCart", shoppingCart);
 
         ctx.redirect("/shoppingCart");
-
     }
 
     // Metode til at vise indkøbskurven
@@ -157,7 +179,7 @@ public class UserController {
         // Beregn totalprisen
         double totalPrice = 0;
         for (Cupcake cupcake : shoppingCart) {
-            totalPrice += cupcake.getPrice() * cupcake.getQuantity();
+            totalPrice += (cupcake.getTopping().getToppingPrice() + cupcake.getBottom().getBottomPrice()) * cupcake.getQuantity();
         }
 
         // Tilføj totalprisen og indkøbskurven til viewet
@@ -167,5 +189,6 @@ public class UserController {
         // Render shoppingCart siden
         ctx.render("shoppingcart.html");
     }
+
 
 }

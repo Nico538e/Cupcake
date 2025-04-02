@@ -4,22 +4,15 @@ public class Cupcake {
     private Bottom bottom;
     private Topping topping;
     private int quantity;
-    private double price;
 
-    public Cupcake(Bottom bottom, Topping topping, int quantity, double price) {
+
+    public Cupcake(Bottom bottom, Topping topping, int quantity) {
         this.bottom = bottom;
         this.topping = topping;
         this.quantity = quantity;
-        this.price = price;
+
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
 
     public Bottom getBottom() {
         return bottom;

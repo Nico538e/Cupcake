@@ -40,13 +40,13 @@
             <th>Bund</th>
             <th>Top</th>
             <th>Antal</th>
-            <th>Pris</th>
+            <th>Pris per stk</th>
         </tr>
         <tr th:each="cupcake : ${session.shoppingCart}">
             <td th:text="${cupcake.bottom.bottomsName}"></td>
             <td th:text="${cupcake.topping.toppingName}"></td>
             <td th:text="${cupcake.quantity}"></td>
-            <td th:text="${cupcake.price} + ' kr'"></td>
+            <td th:text="${cupcake.bottom.bottomPrice} + ${cupcake.topping.toppingPrice} +' kr'"></td>
         </tr>
         <!-- Række til totalpris -->
         <tr>

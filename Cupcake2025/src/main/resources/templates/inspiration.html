@@ -17,8 +17,6 @@
 
 
     <div class="nav">
-        <a class="nav-but" href="#">Ordrer</a>
-        <a class="nav-but" href="ordrehistorik.html">Ordre-historik</a>
 
         <span th:if="${session.currentUser != null}" th:text="${session.currentUser}">Email</span>
         <a class="nav-but" th:if="${session.currentUser != null}" th:href="@{/logout}">Log out</a>
