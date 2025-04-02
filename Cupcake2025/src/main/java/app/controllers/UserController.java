@@ -26,7 +26,7 @@ public class UserController {
         app.get("signUp", ctx -> ctx.render("signUp.html"));// get-methoden bruges til at komme fra forside.hmtl til opretBruger.
         app.post("/signUp", ctx -> createuser(ctx, connectionPool));//post-methoden bruges til at lave en ny bruger og gå tilbage til forside.html
         app.get("/inspiration", ctx -> ctx.render("inspiration.html"));
-        app.get("/shoppingCart", ctx -> showCart(ctx));
+        app.get("/shoppingCart", ctx -> showCart(ctx, connectionPool));
         app.post("/showCupcakes", ctx -> UserController.getCupcakeOptions(ctx, connectionPool));
         app.post("/shoppingCart", ctx -> addToShoppingCart(ctx,connectionPool));
         app.get("/checkout",ctx -> validatePayment(ctx));
