@@ -169,12 +169,12 @@ button:hover {
 .main{
     background: #e6e6e6;
     border: 1px solid grey;
-
+    min-width: 760px;
 }
 
 
 .cart-table {
-    width: 100%;
+    width: 760px;
     border-collapse: collapse;
     margin-top: 20px;
 }
