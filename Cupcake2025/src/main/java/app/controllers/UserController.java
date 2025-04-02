@@ -84,7 +84,7 @@ public class UserController {
             Boolean fromBasket = ctx.sessionAttribute("fromBasket");
 
             if(fromBasket == null){
-                ctx.render("index.html");
+                UserController.getCupcakeOptions(ctx,connectionPool);
             }else{
                 ctx.redirect("/shoppingCart");
             }
