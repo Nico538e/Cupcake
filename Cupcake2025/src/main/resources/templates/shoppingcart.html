@@ -35,20 +35,26 @@
 <div class="main">
     <h2>Din indkøbskurv</h2>
 
-    <table>
+    <table class="cart-table">
         <tr>
             <th>Bund</th>
             <th>Top</th>
             <th>Antal</th>
+            <th>Pris</th>
         </tr>
         <tr th:each="cupcake : ${session.shoppingCart}">
             <td th:text="${cupcake.bottom.bottomsName}"></td>
             <td th:text="${cupcake.topping.toppingName}"></td>
             <td th:text="${cupcake.quantity}"></td>
+            <td th:text="${cupcake.price} + ' kr'"></td>
         </tr>
+        <!-- Række til totalpris -->
+        <tr>
+            <td colspan="3" style="text-align: right; font-weight: bold;">Total:</td>
+            <td th:text="${totalPrice} + ' kr'"></td>
+        </tr>
+
     </table>
-
-
 
     <a class="btn" th:href="@{/checkout}">Gå til betaling</a>
 </div>

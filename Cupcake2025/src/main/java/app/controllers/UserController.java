@@ -29,6 +29,7 @@ public class UserController {
         app.get("/shoppingCart", ctx -> ctx.render("shoppingcart.html"));
         app.post("/showCupcakes", ctx -> UserController.getCupcakeOptions(ctx, connectionPool));
         app.post("/shoppingCart", ctx -> addToShoppingCart(ctx,connectionPool));
+
     }
 
 
@@ -121,12 +122,13 @@ public class UserController {
         int bottomId = Integer.parseInt(ctx.formParam("bottom"));
         int toppingId = Integer.parseInt(ctx.formParam("topping"));
         int quantity = Integer.parseInt(ctx.formParam("quantity"));
+        int price = Integer.parseInt(ctx.formParam("price"));
 
         Bottom bottom = CupcakeMapper.getOneBottomById(connectionPool, bottomId);
         Topping topping = CupcakeMapper.getOneToppingById(connectionPool, toppingId);
 
 
-        Cupcake cupcake = new Cupcake(bottom, topping, quantity);
+        Cupcake cupcake = new Cupcake(bottom, topping, quantity, price);
 
         List<Cupcake> shoppingCart = ctx.sessionAttribute("shoppingCart");
 
@@ -142,5 +144,28 @@ public class UserController {
 
     }
 
+    // Metode til at vise indkøbskurven
+    public static void showCart(Context ctx) {
+        // Hent indkøbskurven fra sessionen (hvis den findes)
+        List<Cupcake> shoppingCart = ctx.sessionAttribute("shoppingCart");
+
+        // Hvis kurven er tom, opret ny liste
+        if (shoppingCart == null) {
+            shoppingCart = new ArrayList<>();
+        }
+
+        // Beregn totalprisen
+        double totalPrice = 0;
+        for (Cupcake cupcake : shoppingCart) {
+            totalPrice += cupcake.getPrice() * cupcake.getQuantity();
+        }
+
+        // Tilføj totalprisen og indkøbskurven til viewet
+        ctx.attribute("totalPrice", totalPrice);
+        ctx.attribute("shoppingCart", shoppingCart);
+
+        // Render shoppingCart siden
+        ctx.render("shoppingcart.html");
+    }
 
 }
