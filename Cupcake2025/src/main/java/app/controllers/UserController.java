@@ -3,6 +3,7 @@ package app.controllers;
 
 
 import app.entities.Bottom;
+import app.entities.Orders;
 import app.entities.Cupcake;
 import app.entities.Topping;
 import app.entities.User;
@@ -28,6 +29,10 @@ public class UserController {
         app.get("/inspiration", ctx -> ctx.render("inspiration.html"));
         app.get("/shoppingCart", ctx -> showCart(ctx, connectionPool));
         app.post("/showCupcakes", ctx -> UserController.getCupcakeOptions(ctx, connectionPool));
+        app.get("/admin", ctx -> UserController.getUserOptions(ctx, connectionPool));
+        app.get("/adminWatchOrders", ctx -> UserController.watchOrders(ctx, connectionPool));
+        app.post("/admin", ctx -> ctx.redirect("page2.html"));
+        System.out.println("den rammer routes");
         app.post("/shoppingCart", ctx -> addToShoppingCart(ctx,connectionPool));
         app.get("/checkout",ctx -> validatePayment(ctx));
 
@@ -57,14 +62,14 @@ public class UserController {
 
     // Metode til at håndtere login
 
-    public static void login(Context ctx, ConnectionPool connectionPool){
+    public static void login(Context ctx, ConnectionPool connectionPool) {
         // Hent email og password fra login-formularen
         String email = ctx.formParam("email");
         String password = ctx.formParam("password");
 
-        try{
+        try {
             User user = CupcakeMapper.login(email, password, connectionPool); //Tjekker om brugeren findes i databasen
-            if(user == null){
+            if (user == null) {
                 ctx.attribute("message", "forkert email eller login");
                 ctx.render("login.html");
                 return;
@@ -73,7 +78,13 @@ public class UserController {
             ctx.sessionAttribute("currentUser", user);//gemmer brugeren i sessionen(så man ikke skal logge ind på hver side)
             ctx.sessionAttribute("currentUser", user.getUserName());//viser emailen i topmenuen, så man ved hvem der er loggegt in
 
-             //TODO: Tjek om den skal hedde getEmail eller getName, da name er email i db
+            //check if you are admin and sending it to admin front page
+            if (user.getRole().equals("admin")) {
+                ctx.redirect("/admin");
+            } else {
+                ctx.redirect("/");
+            }
+            //TODO: Tjek om den skal hedde getEmail eller getName, da name er email i db
 
            /* if(user.isAdmin()){//tjekker om brugeren er admin eller kunde
                 ctx.redirect("/admin");// hvis admin så gå til admin siden
@@ -97,15 +108,15 @@ public class UserController {
         }
     }
 
-    private static void createuser(Context ctx, ConnectionPool connectionPool){
+    private static void createuser(Context ctx, ConnectionPool connectionPool) {
         //Hent email og password fra formularen
         String email = ctx.formParam("email");
         String password1 = ctx.formParam("password1");
         String password2 = ctx.formParam("password2");
 
         //Hvis passwordsne macher lav den nye bruger
-        if(password1.equals(password2)){
-            try{
+        if (password1.equals(password2)) {
+            try {
                 //opretter bruger i db
                 CupcakeMapper.createuser(email, password1, connectionPool);
                 //Sender succes besked
@@ -118,7 +129,7 @@ public class UserController {
                 ctx.attribute("message", "Denne email eksistere allerede");
                 ctx.render("signUp.html");
             }
-        }else{
+        } else {
             //hvis passwordsne ikke er ens
             ctx.attribute("message", "Adgangskoderene matcher ikke");
             ctx.render("signUp.html");
@@ -140,6 +151,36 @@ public class UserController {
             ctx.attribute("message", "Fejl ved hentning af cupcake data");
             ctx.render("error.html");
         }
+    }
+
+
+    public static void getUserOptions(Context ctx, ConnectionPool connectionPool) {
+        try {
+            List<User> users = CupcakeMapper.getAllUsers(connectionPool, "postgres");
+
+            ctx.attribute("users", users);
+            ctx.render("page1.html");
+
+        } catch (DatabaseException e) {
+            ctx.status(500);
+            ctx.attribute("message", "Fejl ved hentning af user data");
+            ctx.render("error.html");
+        }
+    }
+
+    public static void watchOrders(Context ctx, ConnectionPool connectionPool){
+        try {
+            List<Orders> orders = CupcakeMapper.getOrdersByUserId(connectionPool,2);
+
+            ctx.attribute("orders", orders);
+            ctx.render("page2.html");
+
+        } catch (DatabaseException e) {
+            ctx.status(500);
+            ctx.attribute("message", "Fejl ved hentning af order data");
+            ctx.render("error.html");
+        }
+
     }
 
     public static void addToShoppingCart(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
