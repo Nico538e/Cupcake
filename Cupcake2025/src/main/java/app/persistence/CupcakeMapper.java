@@ -2,6 +2,7 @@ package app.persistence;
 
 import app.entities.*;
 import app.exceptions.DatabaseException;
+import org.postgresql.util.PGmoney;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -406,20 +407,26 @@ public class CupcakeMapper {
         return 0;
     }
 
-    //Mangler en metode der kan opdaterer amount på enn kundes id
-    /* public static double updateAmountOnId(Connectionpool connectionPool, int userID, double newAmount){
-    //Jeg er ikke sikker på syntaks
-    String sql = "UPDATE users SET amount = ? where user_id = ?";
-    try(blah blah blah)
-    curly brackets open
-    ps.setDouble(1, newAmount);
-    ps.setInt(2,userID);
-            copy paste linje 47-50 med executeUpdate
+    public static void updateAmountByID(int userId, double newBalance, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "UPDATE users SET amount = ? WHERE user_id = ?";
 
-            Return the newAmount
-           // husk at slutte curly brackets
-         //  return? det kan være I vælger ikke at returnerer
-    }*/
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            PGmoney rigsdaler = new PGmoney(newBalance);
+
+            ps.setObject(1, rigsdaler);
+            ps.setInt(2, userId);
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected != 1) {
+                throw new DatabaseException("Fejl ved opdatering af saldo. Ingen eller flere rækker blev ændret.");
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Fejl ved opdatering af saldo: " + e.getMessage());
+        }
+    }
+
 
 
 }

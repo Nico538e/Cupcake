@@ -12,7 +12,7 @@
         <img src="../public/images/cupcakelogo.png" th:src="@{/images/cupcakelogo.png}" alt="Olsker Cupcakes Logo">
     </div>
     <div class="nav">
-        <span th:if="${session.currentUser != null}" th:text="${session.currentUser}">Email</span>
+        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.userName}">Email</span>
         <a class="nav-but" th:if="${session.currentUser != null}" th:href="@{/logout}">Log out</a>
     </div>
 </div>

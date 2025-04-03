@@ -33,22 +33,57 @@ public class UserController {
         app.get("/adminWatchOrders", ctx -> UserController.watchOrders(ctx, connectionPool));
         app.post("/admin", ctx -> ctx.redirect("page2.html"));
         app.post("/shoppingCart", ctx -> addToShoppingCart(ctx,connectionPool));
-        app.get("/checkout",ctx -> validatePayment(ctx));
-
+        app.get("/checkout",ctx -> validatePayment(ctx, connectionPool));
     }
 
-    private static void validatePayment(@NotNull Context ctx) {
-        User user = ctx.sessionAttribute("currentUser");
 
-        if(user == null){
-            ctx.sessionAttribute("fromBasket", true);
+
+    private static void validatePayment(@NotNull Context ctx, ConnectionPool connectionPool) {
+        List<Cupcake> shoppingCart = ctx.sessionAttribute("shoppingCart");
+
+        User currentUser = ctx.sessionAttribute("currentUser");
+
+        // Hvis brugeren ikke er logget ind, omdiriger til login-siden
+        if (currentUser == null) {
+            ctx.sessionAttribute("fromBasket", true); // Husk hvor brugeren kom fra
             ctx.redirect("/login");
-
-        }else{
-            //træk penge fra database
-            //betaling er gået igemmen side(redirct)
+            return;
         }
 
+        if (shoppingCart == null) {
+            shoppingCart = new ArrayList<>();
+        }
+
+        double totalPrice = 0;
+        for (Cupcake cupcake : shoppingCart) {
+            totalPrice += (cupcake.getTopping().getToppingPrice() + cupcake.getBottom().getBottomPrice()) * cupcake.getQuantity();
+        }
+
+        ctx.sessionAttribute("totalPrice", totalPrice);
+        ctx.sessionAttribute("shoppingCart", shoppingCart);
+
+        try {
+            double userBalance = CupcakeMapper.getAmountById(connectionPool,currentUser.getUserId());
+            ctx.attribute("userBalance", userBalance);
+
+            if(userBalance >= totalPrice){
+                double newBalence = userBalance - totalPrice;
+                CupcakeMapper.updateAmountByID(currentUser.getUserId(), newBalence,connectionPool);
+
+                ctx.sessionAttribute("shoppingCart", new ArrayList<>());
+
+                ctx.attribute("message", "Betalingen er gemmenført, din nye saldo er: " + newBalence);
+                ctx.render("index.html");
+
+            }else{
+                ctx.attribute("message", "Du har detsværre ikke nok på kontoen. Din saldo er:  " + userBalance);
+                ctx.render("shoppingCart.html");
+            }
+        }catch (DatabaseException e){
+            ctx.attribute("message", "Fejl ved betaling:  " + e.getMessage());
+            ctx.render("index.html");
+
+        }
     }
 
 
@@ -75,7 +110,6 @@ public class UserController {
             }
 
             ctx.sessionAttribute("currentUser", user);//gemmer brugeren i sessionen(så man ikke skal logge ind på hver side)
-            ctx.sessionAttribute("currentUser", user.getUserName());//viser emailen i topmenuen, så man ved hvem der er loggegt in
 
             //check if you are admin and sending it to admin front page
             if (user.getRole().equals("admin")) {
@@ -99,7 +133,7 @@ public class UserController {
                 ctx.redirect("/shoppingCart");
             }
 
-//session atribute hvis du kommer fra basket ligesom user
+            //session atribute hvis du kommer fra basket ligesom user
             //if statement med om du komer fra basket
         } catch (DatabaseException e){ // hvis login failer(forkert email eller password), kommer denne besked og siden rendere igen
             ctx.attribute("message", "Forkert email eller password");

@@ -18,7 +18,7 @@
     <div class="nav">
         <a class="nav-but" th:href="@{/inspiration}">Få inspiration</a>
 
-        <span th:if="${session.currentUser != null}" th:text="${session.currentUser}">Email</span>
+        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.userName}">Email</span>
         <a class="nav-but" th:if="${session.currentUser != null}" th:href="@{/logout}">Log out</a>
 
         <a class="nav-but" th:if="${session.currentUser == null}" th:href="@{/login}">Login</a>
