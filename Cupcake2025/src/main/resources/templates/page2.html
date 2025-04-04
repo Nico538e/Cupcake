@@ -2,16 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>WatchUsersOrders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupcake orders</title>
+    <link href="../public/css/cupcakeStyles.css" th:href="@{/css/cupcakeStyles.css}" rel="stylesheet">
 </head>
+
 <body>
-<h2>User orders <span th:text="${userId}"></span></h2>
-<table>
-    <tbody>
-    <tr th:each="order : ${orders}">
-        <td th:text="${orders.userId}"></td>
-    </tr>
-    </tbody>
-</table>
+<div class="header">
+    <div class="logo-section">
+        <a href="login.html" th:href="@{/admin}" class="logo-section">
+        <img src="../public/images/cupcakelogo.png" th:src="@{/images/cupcakelogo.png}" alt="Olsker Cupcakes Logo">
+        </a>
+    </div>
+</div>
+
+    <div class="main">
+        <h2>User orders <span th:text="${userId}"></span></h2>
+
+        <table class="cart-table">
+            <tr>
+                <th>User</th>
+                <th>Order</th>
+            </tr>
+
+            <tr th:each="order : ${orders}">
+                <td th:text="${orders.userId}"></td>
+            </tr>
+
+        </table>
+    </div>
+
 </body>
 </html>
