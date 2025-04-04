@@ -9,7 +9,9 @@
 <body>
 <div class="header">
     <div class="logo-section">
-        <img src="../public/images/cupcakelogo.png" th:src="@{/images/cupcakelogo.png}" alt="Olsker Cupcakes Logo">
+        <a href="login.html" th:href="@{/admin}" class="logo-section">
+            <img src="../public/images/cupcakelogo.png" th:src="@{/images/cupcakelogo.png}" alt="Olsker Cupcakes Logo">
+        </a>
     </div>
     <div class="nav">
         <span th:if="${session.currentUser != null}" th:text="${session.currentUser.userName}">Email</span>
@@ -17,21 +19,26 @@
     </div>
 </div>
 
-<table>
+
+<div>
+
+<table class="cart-table">
     <thead>
     <tr>
         <th>Users</th>
-        <th>ShowOrders</th>
+        <th>Orders</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="user:${users}">
-        <td th:text="|${user.userId}. ${user.userName}|"></td>
+        <td th:text="|${user.userName}|"></td>
         <td>
-            <a class="nav-but" th:if="${session.currentUser != null}" th:href="@{/adminWatchOrders}">Orders</a>
+            <a class="nav-but" th:if="${session.currentUser != null}" th:href="@{/adminWatchOrders}">Show user order</a>
         </td>
     </tr>
     </tbody>
 </table>
+</div>
+
 </body>
 </html>
