@@ -8,9 +8,8 @@ private int orderId;
 private int amount;
 private double orderLinePrice;
 
-
 // publuc OrderLine (int orderLineID, CakeTop top, CakeBottom bottom, int orderID)
-    public OrderLine(int orderLineId, int bottomId, int toppingId, int orderId, double orderLinePrice, double linePrice) {
+    public OrderLine(int orderLineId, int bottomId, int toppingId, int orderId, double orderLinePrice) {
         this.orderLineId = orderLineId;
         this.bottomId = bottomId;
         this.toppingId = toppingId;
@@ -18,6 +17,21 @@ private double orderLinePrice;
         this.orderLinePrice = orderLinePrice;
     }
 
+    public OrderLine(int orderLineId, int bottomId, int toppingId, int orderId, double orderLinePrice, int amount) {
+        this.orderLineId = orderLineId;
+        this.bottomId = bottomId;
+        this.toppingId = toppingId;
+        this.orderId = orderId;
+        this.orderLinePrice = orderLinePrice;
+        this.amount = amount;
+    }
+
+    public OrderLine( int bottomId, int toppingId, int orderId, double orderLinePrice) {
+        this.bottomId = bottomId;
+        this.toppingId = toppingId;
+        this.orderId = orderId;
+        this.orderLinePrice = orderLinePrice;
+    }
 
     public int getOrderLineId() {
         return orderLineId;

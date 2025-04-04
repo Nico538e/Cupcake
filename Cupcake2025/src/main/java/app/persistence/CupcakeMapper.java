@@ -4,6 +4,7 @@ import app.entities.*;
 import app.exceptions.DatabaseException;
 import org.postgresql.util.PGmoney;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,6 @@ public class CupcakeMapper {
         ) {
             ps.setString(1, userName);
             ps.setString(2, password);
-
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected != 1) {
@@ -127,7 +127,6 @@ public class CupcakeMapper {
         }
         return bottomNameList;
     }
-
 
     // works
     public static List<Topping> getAllToppings(ConnectionPool connectionPool) throws DatabaseException {
@@ -255,7 +254,6 @@ public class CupcakeMapper {
     }
 
     //working
-
     public static Bottom getOneBottomByName(ConnectionPool connectionPool, String bottomName) throws DatabaseException {
         String sql = "SELECT bottoms_name, bottom_price FROM bottom where bottoms_name = ?";
 
@@ -277,37 +275,81 @@ public class CupcakeMapper {
         return null;
     }
 
-    // working but not tested so far
-    // watch the list of orderLines
-    public static List<OrderLine> getOrderLinesByOrderId(ConnectionPool connectionPool, int orderId) throws DatabaseException {
-        List<OrderLine> orderLineList = new ArrayList<>();
 
-        String sql = "SELECT order_line_id, bottom_id, topping_id, order_id, amount, order_line_price  " +
-                "FROM order_line Where order_id = ?";
+
+
+    public static List<ShowUserOrders> getOrdersFromAUserByUserId(ConnectionPool connectionPool, int userId) throws DatabaseException {
+        List<ShowUserOrders> userOrderList = new ArrayList<>();
+
+        String sql = "SELECT users.user_name, " +
+                "orders.order_id, " +
+                "order_line.order_line_id, " +
+                "order_line.bottom_id, " +
+                "order_line.topping_id, " +
+                "bottom.bottoms_name, " +
+                "topping.topping_name, " +
+                "order_line.order_line_price " +
+                "FROM orders join order_line on orders.order_id = order_line.order_id " +
+                "join users on users.user_id = orders.user_id " +
+                "join bottom on order_line.bottom_id = bottom.bottom_id " +
+                "join topping on order_line.topping_id = topping.topping_id " +
+                "Where users.user_id = ?";
 
         try (
                 Connection connection = connectionPool.getConnection();
                 PreparedStatement ps = connection.prepareStatement(sql)
         ) {
-        //adding the attribute orderId from parameter in the placeholder = ?
-        ps.setInt(1, orderId);
-        ResultSet rs = ps.executeQuery();
+            //adding the attribute userId from parameter in the placeholder = ?
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                String userName = rs.getString("user_name");
+                int orderId = rs.getInt("order_id");
                 int orderLineId = rs.getInt("order_line_id");
-                int bottomId = rs.getInt("bottom_id");
                 int toppingId = rs.getInt("topping_id");
-                // should maybe be deleted amount
-                int amount = rs.getInt("amount");
+                int bottomId = rs.getInt("bottom_id");
+                String toppingName = rs.getString("topping_name");
+                String bottomName = rs.getString("bottoms_name");
                 double orderLinePrice = rs.getDouble("order_line_price");
+                ShowUserOrders usersOrderLine = new ShowUserOrders(userName, orderId, orderLineId, toppingId, bottomId,
+                toppingName, bottomName, orderLinePrice);
 
-                OrderLine orderLine = new OrderLine(orderLineId, bottomId, toppingId, orderId, amount, orderLinePrice);
-                orderLineList.add(orderLine);
+                userOrderList.add(usersOrderLine);
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Failed trying to get the order_lines", e);
+            System.out.println(e.getMessage());
         }
-        return orderLineList;
+        return userOrderList;
     }
+
+
+
+    public static boolean insertOrderLinesIntoDb(OrderLine orderLine ,ConnectionPool connectionPool) throws DatabaseException {
+        boolean success = false;
+        String sql = "INSERT INTO order_line (order_id, bottom_id, topping_id, amount, order_line_price) VALUES (?,?,?,?,?)";
+
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            BigDecimal moneyValue = BigDecimal.valueOf(orderLine.getOrderLinePrice());
+            ps.setInt(1, orderLine.getOrderId());
+            ps.setInt(2, orderLine.getBottomId());
+            ps.setInt(3, orderLine.getToppingId());
+            ps.setInt(4, orderLine.getAmount());
+            ps.setBigDecimal(5, moneyValue);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected == 1) {
+                success = true;
+            }
+
+        } catch (SQLException e) {
+            //throw new DatabaseException("Failed trying to get the order_lines", e);
+            System.out.println(e.getMessage());
+        }
+        return success;
+    }
+
 
     // working tested but there is no orders
     // get all order for a specific user
@@ -334,56 +376,7 @@ public class CupcakeMapper {
         return ordersList;
     }
 
-
-    //
-    // save orders to the orders table with orderLines
-    public static Orders addOrderWithOrderLines(ConnectionPool connectionPool, int userId, List<OrderLine> orderLines) throws DatabaseException {
-        Orders newOrder = null;
-        String sqlOrder = "INSERT INTO orders (user_id) Values (?)";
-        String sqlOrderLines = "INSERT INTO order_line (order_line_id, order_id, bottom_id, topping_id, amount, order_line_price) VALUES (?,?,?,?,?,?)";
-
-        try (
-                Connection connection = connectionPool.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sqlOrder, Statement.RETURN_GENERATED_KEYS)
-        ) {
-            // insert new order
-            ps.setInt(1, userId);
-            int rowAffected = ps.executeUpdate();
-
-            if(rowAffected == 0){
-                throw new DatabaseException("Could not make a new order for the user with the id: " + userId);
-            }
-
-            try(ResultSet rs = ps.getGeneratedKeys()) {
-                if(rs.next()) {
-                    int newOrderId =  rs.getInt(1);
-
-                    newOrder = new Orders(newOrderId,userId);
-
-                    // insert orderLines
-                    try(PreparedStatement ps2 = connection.prepareStatement(sqlOrderLines)) {
-                        for(OrderLine o: orderLines) {
-                            ps2.setInt(1, o.getOrderLineId());
-                            ps2.setInt(2, newOrderId);
-                            ps2.setInt(3, o.getBottomId());
-                            ps2.setInt(4, o.getToppingId());
-                            ps2.setDouble(5, o.getAmount());
-                            ps2.setDouble(6, o.getOrderLinePrice());
-                            ps2.executeUpdate();
-                        }
-                    }
-                }else {
-                    throw new DatabaseException("could not get orderId that belongs to the userId: " + userId);
-                }
-            }
-        } catch(SQLException e){
-            throw new DatabaseException("failed trying to make an order", e);
-        }
-        return newOrder;
-    }
-
     //Get amount by userId
-
     public static double getAmountById(ConnectionPool connectionPool, int userID) throws DatabaseException {
         String sql = "SELECT amount FROM users where user_id = ?";
 
